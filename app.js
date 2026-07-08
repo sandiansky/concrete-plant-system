@@ -1339,3 +1339,4 @@ function toggleCostType(id) {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
