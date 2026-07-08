@@ -126,10 +126,10 @@ function generateSampleRecords() {
       const extraVol = Math.round(Math.random() * 10);
       const extraPrices = { jx5: 25, jx15: 22, py9: 28 };
       const costs = [
-        { costTypeId: 'diesel', amount: Math.round(3000 + Math.random() * 2000), quantity: Math.round(100 + Math.random() * 80), note: '' },
-        { costTypeId: 'repair', amount: Math.round(500 + Math.random() * 1500), quantity: '', note: '' },
-        { costTypeId: 'reimbursement', amount: Math.round(2000 + Math.random() * 1000), quantity: '', note: '' },
-        { costTypeId: 'other', amount: Math.round(200 + Math.random() * 500), quantity: '', note: '' }
+        { costTypeId: 'diesel', amount: Math.round(3000 + Math.random() * 2000), quantity: Math.round(100 + Math.random() * 80), unitPrice: 7.5, note: '' },
+        { costTypeId: 'repair', amount: Math.round(500 + Math.random() * 1500), quantity: '', unitPrice: '', note: '' },
+        { costTypeId: 'reimbursement', amount: Math.round(2000 + Math.random() * 1000), quantity: '', unitPrice: '', note: '' },
+        { costTypeId: 'other', amount: Math.round(200 + Math.random() * 500), quantity: '', unitPrice: '', note: '' }
       ];
       records.push({
         id: 'rec_' + dateStr + '_' + pid,
@@ -768,7 +768,7 @@ function renderDailyForm(targetDate, targetProject) {
     const extraPrice = rec ? rec.contractOutsideTransportUnitPrice : '';
     const noteVal = rec ? escHtml(rec.note) : '';
     const costs = rec ? (Array.isArray(rec.costs) ? JSON.parse(JSON.stringify(rec.costs)) : []) : [];
-    if (costs.length === 0) { costs.push({ costTypeId: 'diesel', amount: '', quantity: '', note: '' }); costs.push({ costTypeId: 'other', amount: '', quantity: '', note: '' }); }
+    if (costs.length === 0) { costs.push({ costTypeId: 'diesel', amount: '', quantity: '', unitPrice: '', note: '' }); costs.push({ costTypeId: 'other', amount: '', quantity: '', unitPrice: '', note: '' }); }
 
     document.getElementById('dfHeaderDate').textContent = dateVal;
     document.getElementById('dailyFormContent').innerHTML = `<div class="df-body">
@@ -824,7 +824,8 @@ function renderCostRows2(costs) {
     return `<div class="cr-item">
       <select onchange="recalcDailyForm2()">${opts}</select>
       <input type="number" class="cr-amount" placeholder="金额" value="${c.amount !== '' && c.amount != null ? c.amount : ''}" min="0" step="0.01" oninput="recalcDailyForm2()">
-      <input type="number" class="cr-qty" placeholder="数量" value="${c.quantity || ''}" min="0" step="0.1">
+      <input type="number" class="cr-qty" placeholder="数量" value="${c.quantity || ''}" min="0" step="0.1" oninput="recalcDailyForm2()">
+      <input type="number" class="cr-price" placeholder="单价" value="${c.unitPrice || ''}" min="0" step="0.01" oninput="recalcDailyForm2()">
       <input type="text" placeholder="备注" value="${escHtml(c.note)}">
       <button type="button" class="btn btn-danger btn-sm cr-del" onclick="removeCostRow2(this)">×</button>
     </div>`;
@@ -839,7 +840,8 @@ function addCostRow2() {
   div.className = 'cr-item';
   div.innerHTML = `<select onchange="recalcDailyForm2()">${types.map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</select>
     <input type="number" class="cr-amount" placeholder="金额" min="0" step="0.01" oninput="recalcDailyForm2()">
-    <input type="number" class="cr-qty" placeholder="数量" min="0" step="0.1">
+    <input type="number" class="cr-qty" placeholder="数量" min="0" step="0.1" oninput="recalcDailyForm2()">
+    <input type="number" class="cr-price" placeholder="单价" min="0" step="0.01" oninput="recalcDailyForm2()">
     <input type="text" placeholder="备注">
     <button type="button" class="btn btn-danger btn-sm cr-del" onclick="removeCostRow2(this)">×</button>`;
   container.appendChild(div);
@@ -854,6 +856,24 @@ function removeCostRow2(btn) {
 }
 
 function recalcDailyForm2() {
+  // Auto-calculate: amount = qty × unit_price for each cost row
+  const container = document.getElementById('cr2Container');
+  if (container) {
+    container.querySelectorAll('.cr-item').forEach(row => {
+      const qty = parseFloat(row.querySelector('.cr-qty')?.value) || 0;
+      const price = parseFloat(row.querySelector('.cr-price')?.value) || 0;
+      const amountEl = row.querySelector('.cr-amount');
+      if (qty && price && amountEl) {
+        const calculated = qty * price;
+        // Only auto-fill if amount is empty or matches calculated
+        const currentAmt = parseFloat(amountEl.value) || 0;
+        if (currentAmt === 0 || Math.abs(currentAmt - calculated) < 0.01) {
+          amountEl.value = calculated.toFixed(2);
+        }
+      }
+    });
+  }
+
   const g = (id) => parseFloat(document.getElementById(id)?.value) || 0;
   const pj = document.getElementById('df_project')?.value || '';
   const dv = document.getElementById('df_date')?.value || todayStr();
@@ -899,7 +919,7 @@ function copyFromYesterday() {
   document.getElementById('df_extraPrice').value = yr.contractOutsideTransportUnitPrice || '';
   document.getElementById('df_note').value = yr.note || '';
   const costs = yr.costs ? (Array.isArray(yr.costs) ? JSON.parse(JSON.stringify(yr.costs)) : []) : [];
-  if (costs.length === 0) { costs.push({ costTypeId: 'diesel', amount: '', quantity: '', note: '' }); costs.push({ costTypeId: 'other', amount: '', quantity: '', note: '' }); }
+  if (costs.length === 0) { costs.push({ costTypeId: 'diesel', amount: '', quantity: '', unitPrice: '', note: '' }); costs.push({ costTypeId: 'other', amount: '', quantity: '', unitPrice: '', note: '' }); }
   renderCostRows2(costs);
   recalcDailyForm2();
   showToast('已复制昨天数据，请核对后保存', 'info');
@@ -926,6 +946,7 @@ function saveDaily(status) {
         costTypeId: sel.value,
         amount: parseFloat(row.querySelector('.cr-amount')?.value) || 0,
         quantity: parseFloat(row.querySelector('.cr-qty')?.value) || '',
+        unitPrice: parseFloat(row.querySelector('.cr-price')?.value) || '',
         note: (row.querySelector('input[type="text"]')?.value) || ''
       });
     });
@@ -1007,7 +1028,7 @@ function showDailyDetail(id) {
   (rec.costs||[]).forEach(c => { const ct = db.costTypes.find(t => t.id === c.costTypeId); const n = ct ? ct.name : c.costTypeId; if (!costByType[n]) costByType[n]=0; costByType[n] += c.amount||0; });
   const costRows = Object.entries(costByType).map(([n, a]) => {
     const sample = (rec.costs||[]).find(c => { const ct = db.costTypes.find(t => t.id === c.costTypeId); return ct ? ct.name === n : c.costTypeId === n; });
-    const qt = sample && sample.quantity ? `（${sample.quantity}）` : '';
+    const qt = sample && sample.quantity ? ` ${sample.quantity}${sample.unitPrice ? '×¥'+sample.unitPrice : ''}升` : '';
     return `<div class="dg-item"><span class="dg-label">${n}${qt}</span><span class="dg-value">${formatAmt(a)}</span></div>`;
   }).join('');
   showModal('经营详情 - ' + rec.date, `<div class="detail-grid">
