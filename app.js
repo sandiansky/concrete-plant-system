@@ -9,6 +9,14 @@ function saveDB(db) {
 }
 
 function initData() {
+  try {
+    const testKey = '_test_storage';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+  } catch (e) {
+    showToast('您的浏览器不支持本地存储，系统无法正常运行', 'error');
+    return;
+  }
   const existing = localStorage.getItem(DB_KEY);
   if (existing) {
     const db = JSON.parse(existing);
@@ -260,6 +268,17 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sideOverlay').classList.toggle('show');
 }
+
+// Touch support for mobile sidebar toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const menuBtn = document.getElementById('menuBtn');
+  if (menuBtn) {
+    menuBtn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      toggleSidebar();
+    });
+  }
+});
 
 function navigate(page) {
   // Close mobile sidebar if open
