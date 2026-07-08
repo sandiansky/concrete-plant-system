@@ -314,12 +314,132 @@ tbody tr:hover { background: #f8fafc; }
   .cu-grid { grid-template-columns: repeat(2, 1fr); }
   .dash-cards { grid-template-columns: 1fr; }
 }
-@media (max-width: 768px) {
-  .dash-overview { grid-template-columns: 1fr; }
-  .cu-grid { grid-template-columns: 1fr; }
-  .dash-top { flex-direction: column; gap: 12px; }
-  .dash-cards { grid-template-columns: 1fr; }
+@media (max-width: 900px) {
+  .period-cards { grid-template-columns: repeat(3, 1fr); }
+  .period-cards .pc-card:nth-child(n+4) { display: none; }
 }
+
+/* Mobile: sidebar becomes overlay + top bar */
+@media (max-width: 768px) {
+  #app.active { flex-direction: column; }
+  #sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; z-index: 1100; transition: left .25s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.2); }
+  #sidebar.open { left: 0; }
+  .sidebar-header { padding: 20px 20px 16px; }
+  .sidebar-title-row { display: flex; justify-content: space-between; align-items: center; }
+  .sidebar-close { display: block; background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1; }
+  .sidebar-close:hover { color: #fff; }
+  .side-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1050; }
+  .side-overlay.show { display: block; }
+  #mainContent { padding: 0; overflow-y: auto; }
+
+  /* Top bar */
+  #topBar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #0f172a; color: #e2e8f0; position: sticky; top: 0; z-index: 1000; }
+  #menuBtn { background: none; border: none; color: #e2e8f0; font-size: 22px; cursor: pointer; padding: 0 4px; line-height: 1; }
+  #topBarTitle { font-size: 15px; font-weight: 600; flex: 1; }
+  #topBarUser { font-size: 12px; color: #94a3b8; }
+
+  /* Page layout */
+  .page-header { padding: 16px 16px 0; margin-bottom: 16px; }
+  .page-header h1 { font-size: 18px; }
+  .page.active { padding: 0 0 20px; }
+  .dash-section { margin-bottom: 16px; padding: 0 12px; }
+  .card { padding: 14px 16px; }
+
+  /* Dashboard */
+  .dash-top { padding: 12px 12px 0; margin-bottom: 16px; flex-direction: column; gap: 10px; }
+  .dash-welcome h1 { font-size: 17px; }
+  .dash-actions { width: 100%; }
+  .dash-actions .btn { flex: 1; justify-content: center; }
+  .dash-overview { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ov-card { padding: 16px; }
+  .ov-card .ov-value { font-size: 22px; }
+  .cu-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .dash-cards { grid-template-columns: 1fr; gap: 12px; }
+  .dash-rank { padding: 16px; }
+  .rank-item { padding: 12px; flex-wrap: wrap; }
+  .rank-stats .rv { font-size: 16px; }
+
+  /* Daily page */
+  .period-bar { padding: 0 12px; }
+  .daily-filter-row { flex-direction: column; align-items: stretch; padding: 0 12px; }
+  .daily-filter-row .period-date-range { flex-wrap: wrap; }
+  .df-project-select { justify-content: flex-start; }
+  .period-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 12px; }
+  .pc-card { padding: 12px 10px; }
+  .pc-card .pc-value { font-size: 17px; }
+
+  /* Daily form */
+  .daily-form-card, .period-trend, .daily-detail { margin-left: 12px; margin-right: 12px; }
+  .df-header { padding: 14px 16px; flex-wrap: wrap; gap: 6px; }
+  .df-header h2 { font-size: 15px; }
+  .df-body { padding: 14px 16px; }
+  .fr-row { flex-direction: column; gap: 10px; }
+  .fr-field { width: 100%; }
+  .fr-field input, .fr-field select { width: 100%; }
+  .fr-field input[type="number"] { width: 100%; }
+  .fr-field input[type="date"] { width: 100%; }
+  .fr-field select { width: 100%; min-width: unset; }
+
+  /* Cost rows */
+  .cr-item { flex-wrap: wrap; }
+  .cr-item select { width: 100%; }
+  .cr-item input[type="number"] { flex: 1; min-width: 60px; }
+  .cr-item input.cr-amount { width: auto; flex: 1; }
+  .cr-item input.cr-qty { width: 60px; }
+  .cr-item input[type="text"] { width: 100%; flex: unset; min-width: 100%; }
+
+  /* Auto summary */
+  .auto-summary .as-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .auto-summary .as-item .as-value { font-size: 15px; }
+
+  /* Form actions */
+  .fr-actions { flex-direction: column; }
+  .fr-actions .btn { width: 100%; justify-content: center; }
+
+  /* Tables */
+  .dd-header { padding: 10px 16px; }
+  .dd-body { padding: 0 12px 10px; }
+  .daily-detail table th, .daily-detail table td { padding: 6px 4px; font-size: 11px; }
+
+  /* Settlement */
+  #pageSettlement .card { margin-left: 12px; margin-right: 12px; }
+  #pageSettlement .page-header { padding-left: 12px; padding-right: 12px; }
+  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* Analysis */
+  #pageAnalysis .card { margin-left: 12px; margin-right: 12px; }
+  #pageAnalysis .page-header { padding-left: 12px; padding-right: 12px; }
+  .chart-row .chart-label { width: 40px; font-size: 11px; }
+  .chart-row .chart-val { width: 50px; font-size: 11px; }
+
+  /* Ledger */
+  #pageLedger .card { margin-left: 12px; margin-right: 12px; }
+  #pageLedger .page-header { padding-left: 12px; padding-right: 12px; }
+  .ledger-filter-bar { padding: 0 12px; }
+  .tabs { flex-wrap: wrap; margin-left: 12px; margin-right: 12px; }
+  .tab-item { padding: 8px 12px; font-size: 12px; }
+
+  /* Settings */
+  #pageSettings .card { margin-left: 12px; margin-right: 12px; }
+  #pageSettings .page-header { padding-left: 12px; padding-right: 12px; }
+
+  /* Modal */
+  .modal { width: 95vw; max-width: 95vw; border-radius: 12px; }
+  .modal-header { padding: 16px 16px 0; }
+  .modal-body { padding: 12px 16px; }
+  .form-grid { grid-template-columns: 1fr; gap: 10px; }
+
+  /* Trend chart */
+  .period-trend .pt-grid { height: 80px; }
+
+  /* Toast */
+  .toast { left: 16px; right: 16px; text-align: center; top: 12px; }
+}
+
+/* Desktop: hide mobile elements */
+#topBar, .sidebar-close, .side-overlay { display: none; }
+.sidebar-title-row { display: flex; justify-content: space-between; align-items: center; }
+
 @media print {
   #sidebar, .filter-bar, .btn, .form-actions { display: none !important; }
   #mainContent { padding: 0; }
