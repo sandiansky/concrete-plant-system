@@ -215,6 +215,7 @@ function showApp() {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('app').classList.add('active');
   document.getElementById('userName').textContent = currentUser.name;
+  document.getElementById('topBarUser').textContent = currentUser.name;
   const roleMap = { super_admin: '超级管理员', leader: '公司领导', project_manager: '项目负责人', finance: '财务' };
   document.getElementById('userRole').textContent = roleMap[currentUser.role] || currentUser.role;
   const pnames = currentUser.projects.map(getProjectName).join('、');
@@ -255,7 +256,16 @@ function canModifyProject(pid) {
   return false;
 }
 
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sideOverlay').classList.toggle('show');
+}
+
 function navigate(page) {
+  // Close mobile sidebar if open
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sideOverlay').classList.remove('show');
+
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   const navEl = document.querySelector(`.nav-item[data-page="${page}"]`);
   if (navEl) navEl.classList.add('active');
