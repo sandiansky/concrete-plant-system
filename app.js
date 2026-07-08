@@ -1,4 +1,5 @@
 const DB_KEY = 'concrete_plant_system';
+const GITHUB_CONFIG_KEY = 'github_sync_config';
 
 function getDB() {
   const raw = localStorage.getItem(DB_KEY);
@@ -6,6 +7,52 @@ function getDB() {
 }
 function saveDB(db) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
+  syncToGitHub(db);
+}
+
+function getGitHubConfig() {
+  const raw = localStorage.getItem(GITHUB_CONFIG_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+function saveGitHubConfig(config) {
+  localStorage.setItem(GITHUB_CONFIG_KEY, JSON.stringify(config));
+}
+
+function syncToGitHub(db, cb) {
+  const config = getGitHubConfig();
+  if (!config || !config.token || !config.repo) return;
+  
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2))));
+  const url = `https://api.github.com/repos/${config.repo}/contents/data.json`;
+  const headers = { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' };
+
+  // Get current file SHA first (if exists)
+  fetch(url, { headers })
+    .then(r => r.json().then(data => ({ status: r.status, data })))
+    .then(({ status, data }) => {
+      const body = { message: 'sync data', content: content, branch: 'main' };
+      if (status === 200 && data.sha) body.sha = data.sha;
+      return fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+    })
+    .then(r => { if (cb) cb(true); })
+    .catch(e => { console.warn('GitHub sync failed:', e); if (cb) cb(false); });
+}
+
+function loadFromGitHub(config, callback) {
+  const headers = { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' };
+  fetch(`https://api.github.com/repos/${config.repo}/contents/data.json`, { headers })
+    .then(r => r.json())
+    .then(data => {
+      if (data.content) {
+        const json = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
+        localStorage.setItem(DB_KEY, JSON.stringify(json));
+        if (callback) callback(json);
+      } else {
+        if (callback) callback(null);
+      }
+    })
+    .catch(e => { console.warn('GitHub load failed:', e); if (callback) callback(null); });
 }
 
 function initData() {
@@ -211,6 +258,20 @@ function init() {
     showApp();
   } else {
     showLogin();
+  }
+  // Try loading data from GitHub after login
+  const ghConfig = getGitHubConfig();
+  if (ghConfig && ghConfig.token && ghConfig.repo) {
+    loadFromGitHub(ghConfig, function(data) {
+      if (data && currentUser) {
+        // If we're already in the app, refresh the current page
+        const active = document.querySelector('.page.active');
+        if (active) {
+          const page = active.id.replace('page', '').toLowerCase();
+          navigate(page);
+        }
+      }
+    });
   }
 }
 
@@ -1252,7 +1313,71 @@ function renderAnalysis() {
 // ========== Settings ==========
 function renderSettings() {
   if (!canManageSettings()) { showToast('无权访问', 'error'); navigate('dashboard'); return; }
-  renderProjectsTab(); renderUsersTab(); renderCostTypesTab();
+  renderProjectsTab(); renderUsersTab(); renderCostTypesTab(); renderSyncTab();
+}
+
+function renderSyncTab() {
+  const config = getGitHubConfig();
+  const tokenEl = document.getElementById('ghToken');
+  const repoEl = document.getElementById('ghRepo');
+  if (config) {
+    if (tokenEl) { tokenEl.value = config.token || ''; }
+    if (repoEl) { repoEl.value = config.repo || ''; }
+  }
+}
+
+function saveGitHubConfigUI() {
+  const token = document.getElementById('ghToken').value.trim();
+  const repo = document.getElementById('ghRepo').value.trim();
+  if (!token || !repo) { showToast('请填写 Token 和仓库地址', 'error'); return; }
+  saveGitHubConfig({ token, repo });
+  const status = document.getElementById('syncStatus');
+  if (status) status.textContent = '✓ 配置已保存，下次保存数据时将自动同步';
+  showToast('GitHub 同步配置已保存', 'success');
+  // Do an initial sync
+  syncToGitHub(getDB(), function(ok) {
+    if (status) status.textContent = ok ? '✓ 首次同步成功' : '✗ 同步失败，请检查 Token 和仓库地址';
+  });
+}
+
+function clearGitHubConfig() {
+  localStorage.removeItem(GITHUB_CONFIG_KEY);
+  document.getElementById('ghToken').value = '';
+  document.getElementById('ghRepo').value = '';
+  const status = document.getElementById('syncStatus');
+  if (status) status.textContent = '已清除 GitHub 同步配置';
+  showToast('配置已清除', 'info');
+}
+
+function manualSyncToGitHub() {
+  const status = document.getElementById('syncStatus');
+  if (status) status.textContent = '正在同步...';
+  syncToGitHub(getDB(), function(ok) {
+    if (status) status.textContent = ok ? '✓ 同步成功！' : '✗ 同步失败';
+    showToast(ok ? '同步成功' : '同步失败', ok ? 'success' : 'error');
+  });
+}
+
+function manualLoadFromGitHub() {
+  const config = getGitHubConfig();
+  if (!config || !config.token || !config.repo) { showToast('请先配置 GitHub Token 和仓库地址', 'error'); return; }
+  const status = document.getElementById('syncStatus');
+  if (status) status.textContent = '正在从 GitHub 加载...';
+  loadFromGitHub(config, function(data) {
+    if (data) {
+      if (status) status.textContent = '✓ 数据已从 GitHub 加载';
+      showToast('数据已加载', 'success');
+      // Refresh current page
+      const active = document.querySelector('.page.active');
+      if (active) {
+        const page = active.id.replace('page', '').toLowerCase();
+        navigate(page);
+      }
+    } else {
+      if (status) status.textContent = '✗ 加载失败，检查 Token 权限或 data.json 是否存在';
+      showToast('加载失败', 'error');
+    }
+  });
 }
 
 function renderProjectsTab() {
