@@ -291,24 +291,13 @@
       <div class="tab-content" id="tabSync">
         <div class="card">
           <div class="card-title">GitHub 数据同步</div>
-          <p style="font-size:13px;color:#64748b;margin-bottom:12px;">配置后每次保存数据会自动同步到 GitHub 仓库，多台电脑可共享数据。</p>
-          <div class="form-grid">
-            <div class="form-group form-full">
-              <label>GitHub Token</label>
-              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-            </div>
-            <div class="form-group form-full">
-              <label>仓库地址（格式：用户名/仓库名）</label>
-              <input type="text" id="ghRepo" placeholder="sandiansky/concrete-plant-system">
-            </div>
+          <p style="font-size:13px;color:#64748b;margin-bottom:8px;">数据自动同步到仓库 <strong>sandiansky/concrete-plant-system</strong> 的 data.json 文件，多台电脑共享数据。</p>
+          <div style="font-size:13px;color:#059669;margin-bottom:12px;">✓ 同步已启用（保存数据后自动推送）</div>
+          <div class="form-actions" style="justify-content:flex-start;">
+            <button class="btn btn-sm btn-success" onclick="manualSyncToGitHub()">立即同步到 GitHub</button>
+            <button class="btn btn-sm btn-outline" onclick="manualLoadFromGitHub()">从 GitHub 加载</button>
           </div>
-          <div class="form-actions">
-            <button class="btn btn-outline" onclick="clearGitHubConfig()">清除配置</button>
-            <button class="btn btn-primary" onclick="saveGitHubConfigUI()">保存配置</button>
-            <button class="btn btn-success" onclick="manualSyncToGitHub()">立即同步到 GitHub</button>
-            <button class="btn btn-outline" onclick="manualLoadFromGitHub()">从 GitHub 加载</button>
-          </div>
-          <div id="syncStatus" style="margin-top:12px;font-size:13px;color:#64748b;"></div>
+          <div id="syncStatus" style="margin-top:10px;font-size:13px;color:#64748b;"></div>
         </div>
       </div>
     </div>
