@@ -372,11 +372,13 @@ function renderDashboard() {
   const totals = projData.reduce((t, d) => ({
     todayProd: t.todayProd + d.todayProd,
     todayIncome: t.todayIncome + d.todayIncome,
+    todayCost: t.todayCost + (d.todayFloating + d.todayFixed),
     todayProfit: t.todayProfit + d.todayProfit
-  }), { todayProd: 0, todayIncome: 0, todayProfit: 0 });
+  }), { todayProd: 0, todayIncome: 0, todayCost: 0, todayProfit: 0 });
 
   renderTopSection(projData, isPM);
   renderOverview(totals);
+  renderCumulative(projData);
   renderAlerts(projData);
   renderProjectCards(projData);
   renderRanking(projData);
@@ -414,9 +416,27 @@ function renderTopSection(projData, isPM) {
 
 function renderOverview(totals) {
   document.getElementById('dashOverview').innerHTML = `<div class="dash-overview">
-    <div class="ov-card"><div class="ov-icon">🏗️</div><div class="ov-label">今日生产</div><div class="ov-value dark">${totals.todayProd}m³</div><div class="ov-sub">全项目合计</div></div>
-    <div class="ov-card"><div class="ov-icon">💰</div><div class="ov-label">今日收入</div><div class="ov-value blue">¥${formatNum(totals.todayIncome)}</div><div class="ov-sub">全项目合计</div></div>
-    <div class="ov-card"><div class="ov-icon">📊</div><div class="ov-label">今日利润（含固定成本）</div><div class="ov-value ${totals.todayProfit >= 0 ? 'green' : 'red'}">${totals.todayProfit >= 0 ? '+' : ''}¥${formatNum(totals.todayProfit)}</div><div class="ov-sub">含固定成本自动分摊</div></div>
+    <div class="ov-card"><div class="ov-icon">🏗️</div><div class="ov-label">今日生产</div><div class="ov-value dark">${totals.todayProd}<span style="font-size:16px;"> m³</span></div><div class="ov-sub">全项目合计</div></div>
+    <div class="ov-card"><div class="ov-icon">💰</div><div class="ov-label">今日收入</div><div class="ov-value blue">${totals.todayIncome >= 10000 ? formatAmt(totals.todayIncome) : '¥'+formatNum(totals.todayIncome)}</div><div class="ov-sub">含加工/运输/合同外</div></div>
+    <div class="ov-card"><div class="ov-icon">📉</div><div class="ov-label">今日成本</div><div class="ov-value red">${formatAmt(totals.todayCost||0)}</div><div class="ov-sub">固定+浮动</div></div>
+    <div class="ov-card"><div class="ov-icon">📊</div><div class="ov-label">今日利润</div><div class="ov-value ${totals.todayProfit >= 0 ? 'green' : 'red'}">${formatProfit(totals.todayProfit)}</div><div class="ov-sub">含固定成本自动分摊</div></div>
+  </div>`;
+}
+
+function renderCumulative(projData) {
+  const allProd = projData.reduce((s, d) => s + d.allProd, 0);
+  const allIncome = projData.reduce((s, d) => s + d.allIncome, 0);
+  const allFloating = projData.reduce((s, d) => s + d.allFloating, 0);
+  const allFixed = projData.reduce((s, d) => s + d.allFixed, 0);
+  const allProfit = allIncome - allFloating - allFixed;
+  document.getElementById('dashCumulative').innerHTML = `<div class="dash-cumulative">
+    <div class="cu-header">📋 累计经营（全项目）</div>
+    <div class="cu-grid">
+      <div class="cu-card cu-prod"><div class="cu-label">累计生产</div><div class="cu-value dark">${formatWan(allProd)}<span style="font-size:13px;">万 m³</span></div></div>
+      <div class="cu-card cu-income"><div class="cu-label">累计收入</div><div class="cu-value blue">${formatAmt(allIncome)}</div></div>
+      <div class="cu-card cu-cost"><div class="cu-label">累计成本</div><div class="cu-value red">${formatAmt(allFloating + allFixed)}</div></div>
+      <div class="cu-card cu-profit"><div class="cu-label">累计利润</div><div class="cu-value ${allProfit >= 0 ? 'green' : 'red'}">${formatProfit(allProfit)}</div></div>
+    </div>
   </div>`;
 }
 
