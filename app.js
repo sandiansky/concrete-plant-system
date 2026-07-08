@@ -372,8 +372,19 @@ document.getElementById('ledgerTabs').addEventListener('click', function(e) {
   if (!tab) return;
   document.querySelectorAll('#ledgerTabs .tab-item').forEach(el => el.classList.remove('active'));
   tab.classList.add('active');
-  document.querySelectorAll('#pageLedger .tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#pageLedger > .tab-content').forEach(el => el.classList.remove('active'));
   document.getElementById(tab.dataset.tab).classList.add('active');
+  if (tab.dataset.tab === 'ledgerFloatingCost') renderCostTypesTab();
+});
+
+document.getElementById('ledgerFixedCost').addEventListener('click', function(e) {
+  const tab = e.target.closest('.sub-tab-item');
+  if (!tab) return;
+  document.querySelectorAll('#ledgerFixedCost .sub-tab-item').forEach(el => el.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('#ledgerFixedCost > .sub-tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab.dataset.subtab).classList.add('active');
+  renderLedgerTab(tab.dataset.subtab === 'subPersonnel' ? 'Personnel' : tab.dataset.subtab === 'subMachinery' ? 'Machinery' : 'Fixed');
 });
 
 let toastTimer = null;
@@ -1299,7 +1310,7 @@ function renderAnalysis() {
 // ========== Settings ==========
 function renderSettings() {
   if (!canManageSettings()) { showToast('无权访问', 'error'); navigate('dashboard'); return; }
-  renderProjectsTab(); renderUsersTab(); renderCostTypesTab();
+  renderProjectsTab(); renderUsersTab();
 }
 
 function manualSyncToGitHub() {
