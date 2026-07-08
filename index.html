@@ -22,9 +22,13 @@
 </div>
 
 <div id="app">
+  <div id="sideOverlay" class="side-overlay" onclick="toggleSidebar()"></div>
   <div id="sidebar">
     <div class="sidebar-header">
-      <h2>拌合站经营系统</h2>
+      <div class="sidebar-title-row">
+        <h2>拌合站经营系统</h2>
+        <button class="sidebar-close" id="sideClose" onclick="toggleSidebar()">✕</button>
+      </div>
       <div class="user-info">
         <span id="userName"></span>
         <span id="userRole" class="role-badge"></span>
@@ -43,6 +47,11 @@
   </div>
 
   <div id="mainContent">
+    <div id="topBar">
+      <button id="menuBtn" onclick="toggleSidebar()">☰</button>
+      <span id="topBarTitle">拌合站经营系统</span>
+      <span id="topBarUser"></span>
+    </div>
 
     <!-- Dashboard -->
     <div class="page active" id="pageDashboard">
