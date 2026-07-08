@@ -320,6 +320,10 @@ tbody tr:hover { background: #f8fafc; }
   .period-cards .pc-card:nth-child(n+4) { display: none; }
 }
 
+/* Desktop: hide mobile elements */
+#topBar, .sidebar-close, .side-overlay { display: none; }
+.sidebar-title-row { display: flex; justify-content: space-between; align-items: center; }
+
 /* Mobile: sidebar becomes overlay + top bar */
 @media (max-width: 768px) {
   #app.active { flex-direction: column; }
@@ -437,10 +441,6 @@ tbody tr:hover { background: #f8fafc; }
   /* Toast */
   .toast { left: 16px; right: 16px; text-align: center; top: 12px; }
 }
-
-/* Desktop: hide mobile elements */
-#topBar, .sidebar-close, .side-overlay { display: none; }
-.sidebar-title-row { display: flex; justify-content: space-between; align-items: center; }
 
 @media print {
   #sidebar, .filter-bar, .btn, .form-actions { display: none !important; }
