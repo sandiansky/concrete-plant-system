@@ -195,6 +195,14 @@ tbody tr:hover { background: #f8fafc; }
 .tab-item.active { color: #1a56db; border-bottom-color: #1a56db; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
+
+/* Sub-tabs (inside tab content) */
+.sub-tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; }
+.sub-tab-item { padding: 8px 16px; cursor: pointer; color: #94a3b8; font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; font-size: 13px; }
+.sub-tab-item:hover { color: #64748b; }
+.sub-tab-item.active { color: #1a56db; border-bottom-color: #1a56db; }
+.sub-tab-content { display: none; }
+.sub-tab-content.active { display: block; }
 .tab-content table th, .tab-content table td { padding: 7px 8px; font-size: 12px; }
 .tab-content table td .btn-sm { height: 26px; padding: 0 8px; font-size: 11px; }
 
