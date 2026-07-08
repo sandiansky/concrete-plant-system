@@ -37,8 +37,8 @@
     </div>
     <nav id="nav">
       <div class="nav-item active" data-page="dashboard"><span class="icon">🏠</span>首页</div>
-      <div class="nav-item" data-page="daily"><span class="icon">📝</span>经营日报</div>
-      <div class="nav-item" data-page="ledger"><span class="icon">📒</span>基础台账</div>
+      <div class="nav-item" data-page="daily"><span class="icon">📝</span>经营中心</div>
+      <div class="nav-item" data-page="ledger"><span class="icon">📒</span>成本中心</div>
       <div class="nav-item" data-page="settlement"><span class="icon">💰</span>结算中心</div>
       <div class="nav-item" data-page="analysis"><span class="icon">📊</span>经营分析</div>
       <div class="nav-item" data-page="settings" id="navSettings"><span class="icon">⚙</span>系统设置</div>
@@ -84,7 +84,7 @@
       <div class="period-trend" id="periodTrend"></div>
       <div class="daily-form-card" id="dailyFormContainer">
         <div class="df-header">
-          <h2>经营日报</h2>
+          <h2>经营中心</h2>
           <span class="df-date" id="dfHeaderDate"></span>
           <div style="display:flex;gap:8px;">
             <button class="btn btn-sm btn-outline" onclick="copyFromYesterday()">📋 复制昨天</button>
@@ -156,8 +156,8 @@
     <!-- Ledger -->
     <div class="page" id="pageLedger">
       <div class="page-header">
-        <h1>基础台账</h1>
-        <p>维护固定成本基础数据，按月自动参与利润计算</p>
+        <h1>成本中心</h1>
+        <p>管理固定成本和浮动成本，按月自动参与利润计算</p>
       </div>
       <div class="ledger-filter-bar">
         <div class="dt-field">
@@ -167,49 +167,73 @@
           </select>
         </div>
       </div>
+
       <div class="tabs" id="ledgerTabs">
-        <div class="tab-item active" data-tab="ledgerPersonnel">👤 人员</div>
-        <div class="tab-item" data-tab="ledgerMachinery">🚜 机械</div>
-        <div class="tab-item" data-tab="ledgerFixed">📋 固定费用</div>
+        <div class="tab-item active" data-tab="ledgerFixedCost">📋 固定成本</div>
+        <div class="tab-item" data-tab="ledgerFloatingCost">📊 浮动成本</div>
       </div>
-      <div class="tab-content active" id="ledgerPersonnel">
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">人员工资</span>
-            <button class="btn btn-success btn-sm" onclick="showLedgerForm('personnel')">＋ 新增人员</button>
+
+      <div class="tab-content active" id="ledgerFixedCost">
+        <div class="sub-tabs">
+          <div class="sub-tab-item active" data-subtab="subPersonnel">👤 人员</div>
+          <div class="sub-tab-item" data-subtab="subMachinery">🚜 机械</div>
+          <div class="sub-tab-item" data-subtab="subExpenses">📋 固定费用</div>
+        </div>
+        <div class="sub-tab-content" id="subPersonnel">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span class="card-title" style="margin:0;">人员工资</span>
+              <button class="btn btn-success btn-sm" onclick="showLedgerForm('personnel')">＋ 新增人员</button>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead><tr><th>姓名</th><th>岗位</th><th>所属项目</th><th class="num">月工资</th><th>入职日期</th><th>离职日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
+                <tbody id="ledgerPersonnelBody"></tbody>
+              </table>
+            </div>
           </div>
-          <div class="table-container">
-            <table>
-              <thead><tr><th>姓名</th><th>岗位</th><th>所属项目</th><th class="num">月工资</th><th>入职日期</th><th>离职日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
-              <tbody id="ledgerPersonnelBody"></tbody>
-            </table>
+        </div>
+        <div class="sub-tab-content" id="subMachinery">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span class="card-title" style="margin:0;">租赁机械</span>
+              <button class="btn btn-success btn-sm" onclick="showLedgerForm('machinery')">＋ 新增机械</button>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead><tr><th>设备名称</th><th>租赁单位</th><th>所属项目</th><th class="num">月租金</th><th>开始日期</th><th>结束日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
+                <tbody id="ledgerMachineryBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="sub-tab-content" id="subExpenses">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span class="card-title" style="margin:0;">固定费用</span>
+              <button class="btn btn-success btn-sm" onclick="showLedgerForm('fixed')">＋ 新增费用</button>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead><tr><th>费用名称</th><th>所属项目</th><th class="num">金额</th><th>开始日期</th><th>结束日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
+                <tbody id="ledgerFixedBody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-      <div class="tab-content" id="ledgerMachinery">
+
+      <div class="tab-content" id="ledgerFloatingCost">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">租赁机械</span>
-            <button class="btn btn-success btn-sm" onclick="showLedgerForm('machinery')">＋ 新增机械</button>
+            <span class="card-title" style="margin:0;">浮动成本类型</span>
+            <button class="btn btn-success btn-sm" onclick="showCostTypeForm()">＋ 新增类型</button>
           </div>
+          <p style="font-size:13px;color:#64748b;margin-bottom:12px;">浮动成本在经营中心录入时选择类型，按月自动汇总参与利润计算。</p>
           <div class="table-container">
             <table>
-              <thead><tr><th>设备名称</th><th>租赁单位</th><th>所属项目</th><th class="num">月租金</th><th>开始日期</th><th>结束日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
-              <tbody id="ledgerMachineryBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="tab-content" id="ledgerFixed">
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">固定费用</span>
-            <button class="btn btn-success btn-sm" onclick="showLedgerForm('fixed')">＋ 新增费用</button>
-          </div>
-          <div class="table-container">
-            <table>
-              <thead><tr><th>费用名称</th><th>所属项目</th><th class="num">金额</th><th>开始日期</th><th>结束日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
-              <tbody id="ledgerFixedBody"></tbody>
+              <thead><tr><th>名称</th><th>状态</th><th class="text-center">操作</th></tr></thead>
+              <tbody id="costTypeTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -243,7 +267,6 @@
       <div class="tabs" id="settingsTabs">
         <div class="tab-item active" data-tab="tabProjects">项目设置</div>
         <div class="tab-item" data-tab="tabUsers">用户设置</div>
-        <div class="tab-item" data-tab="tabCostTypes">成本类型</div>
         <div class="tab-item" data-tab="tabSync">数据同步</div>
       </div>
       <div class="tab-content active" id="tabProjects">
@@ -270,20 +293,6 @@
             <table>
               <thead><tr><th>账号</th><th>姓名</th><th>角色</th><th>负责项目</th><th class="text-center">操作</th></tr></thead>
               <tbody id="userTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="tab-content" id="tabCostTypes">
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">成本类型列表</span>
-            <button class="btn btn-success btn-sm" onclick="showCostTypeForm()">＋ 新增类型</button>
-          </div>
-          <div class="table-container">
-            <table>
-              <thead><tr><th>名称</th><th>状态</th><th class="text-center">操作</th></tr></thead>
-              <tbody id="costTypeTableBody"></tbody>
             </table>
           </div>
         </div>
