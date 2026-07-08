@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>娣峰嚌鍦熸媽鍚堢珯缁忚惀绯荤粺</title>
+  <title>混凝土拌合站经营系统</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="loginPage">
   <div class="login-container">
-    <h1>娣峰嚌鍦熸媽鍚堢珯缁忚惀绯荤粺</h1>
+    <h1>混凝土拌合站经营系统</h1>
     <p class="subtitle">Concrete Batching Plant Management System</p>
     <form id="loginForm" autocomplete="off">
-      <input type="text" id="username" placeholder="璐﹀彿" autocomplete="off">
-      <input type="password" id="password" placeholder="瀵嗙爜" autocomplete="off">
-      <button type="submit">鐧?褰?/button>
+      <input type="text" id="username" placeholder="账号" autocomplete="off">
+      <input type="password" id="password" placeholder="密码" autocomplete="off">
+      <button type="submit">登 录</button>
       <p id="loginError"></p>
     </form>
   </div>
@@ -24,7 +24,7 @@
 <div id="app">
   <div id="sidebar">
     <div class="sidebar-header">
-      <h2>鎷屽悎绔欑粡钀ョ郴缁?/h2>
+      <h2>拌合站经营系统</h2>
       <div class="user-info">
         <span id="userName"></span>
         <span id="userRole" class="role-badge"></span>
@@ -32,14 +32,14 @@
       </div>
     </div>
     <nav id="nav">
-      <div class="nav-item active" data-page="dashboard"><span class="icon">馃彔</span>棣栭〉</div>
-      <div class="nav-item" data-page="daily"><span class="icon">馃摑</span>缁忚惀鏃ユ姤</div>
-      <div class="nav-item" data-page="ledger"><span class="icon">馃搾</span>鍩虹鍙拌处</div>
-      <div class="nav-item" data-page="settlement"><span class="icon">馃挵</span>缁撶畻涓績</div>
-      <div class="nav-item" data-page="analysis"><span class="icon">馃搳</span>缁忚惀鍒嗘瀽</div>
-      <div class="nav-item" data-page="settings" id="navSettings"><span class="icon">鈿?/span>绯荤粺璁剧疆</div>
+      <div class="nav-item active" data-page="dashboard"><span class="icon">🏠</span>首页</div>
+      <div class="nav-item" data-page="daily"><span class="icon">📝</span>经营日报</div>
+      <div class="nav-item" data-page="ledger"><span class="icon">📒</span>基础台账</div>
+      <div class="nav-item" data-page="settlement"><span class="icon">💰</span>结算中心</div>
+      <div class="nav-item" data-page="analysis"><span class="icon">📊</span>经营分析</div>
+      <div class="nav-item" data-page="settings" id="navSettings"><span class="icon">⚙</span>系统设置</div>
     </nav>
-    <button id="logoutBtn">閫€鍑虹櫥褰?/button>
+    <button id="logoutBtn">退出登录</button>
   </div>
 
   <div id="mainContent">
@@ -59,14 +59,14 @@
       <div class="daily-filter-row" id="dailyFilterRow">
         <div class="period-date-range" id="periodDateRange">
           <input type="date" id="periodStartDate">
-          <span style="color:#94a3b8;font-size:13px;">鑷?/span>
+          <span style="color:#94a3b8;font-size:13px;">至</span>
           <input type="date" id="periodEndDate">
-          <button class="btn btn-primary btn-sm" onclick="renderDaily()">鏌?璇?/button>
+          <button class="btn btn-primary btn-sm" onclick="renderDaily()">查 询</button>
         </div>
         <div class="df-project-select">
-          <label>椤圭洰</label>
+          <label>项目</label>
           <select id="dailyProjectFilter" onchange="renderDaily()">
-            <option value="">鍏ㄩ儴椤圭洰</option>
+            <option value="">全部项目</option>
           </select>
         </div>
       </div>
@@ -74,17 +74,17 @@
       <div class="period-trend" id="periodTrend"></div>
       <div class="daily-form-card" id="dailyFormContainer">
         <div class="df-header">
-          <h2>缁忚惀鏃ユ姤</h2>
+          <h2>经营日报</h2>
           <span class="df-date" id="dfHeaderDate"></span>
           <div style="display:flex;gap:8px;">
-            <button class="btn btn-sm btn-outline" onclick="copyFromYesterday()">馃搵 澶嶅埗鏄ㄥぉ</button>
+            <button class="btn btn-sm btn-outline" onclick="copyFromYesterday()">📋 复制昨天</button>
           </div>
         </div>
         <div id="dailyFormContent"></div>
       </div>
       <div class="daily-detail">
         <div class="dd-header">
-          <span>缁忚惀鏄庣粏</span>
+          <span>经营明细</span>
           <span class="dd-count" id="dhCount"></span>
         </div>
         <div class="dd-body">
@@ -92,22 +92,22 @@
             <table>
               <thead>
                 <tr>
-                  <th>鏃ユ湡</th>
-                  <th>椤圭洰</th>
-                  <th class="num">鐢熶骇鏂归噺</th>
-                  <th class="num">鏀跺叆</th>
-                  <th class="num">鎴愭湰</th>
-                  <th class="num">鍒╂鼎</th>
-                  <th class="num">鍒╂鼎鐜?/th>
-                  <th class="text-center">鐘舵€?/th>
-                  <th>褰曞叆浜?/th>
-                  <th class="text-center">鎿嶄綔</th>
+                  <th>日期</th>
+                  <th>项目</th>
+                  <th class="num">生产方量</th>
+                  <th class="num">收入</th>
+                  <th class="num">成本</th>
+                  <th class="num">利润</th>
+                  <th class="num">利润率</th>
+                  <th class="text-center">状态</th>
+                  <th>录入人</th>
+                  <th class="text-center">操作</th>
                 </tr>
               </thead>
               <tbody id="dailyTableBody"></tbody>
             </table>
           </div>
-          <p id="dailyEmpty" style="text-align:center;color:#94a3b8;padding:20px 0;">鏆傛棤鏁版嵁</p>
+          <p id="dailyEmpty" style="text-align:center;color:#94a3b8;padding:20px 0;">暂无数据</p>
         </div>
       </div>
     </div>
@@ -115,28 +115,28 @@
     <!-- Settlement -->
     <div class="page" id="pageSettlement">
       <div class="page-header">
-        <h1>缁撶畻涓績</h1>
-        <p>鎸夐」鐩€佹湀浠界粺璁＄粡钀ユ暟鎹紙鍖呭惈鍥哄畾鎴愭湰涓庢诞鍔ㄦ垚鏈級</p>
+        <h1>结算中心</h1>
+        <p>按项目、月份统计经营数据（包含固定成本与浮动成本）</p>
       </div>
       <div class="card">
         <div class="filter-bar">
-          <label>椤圭洰</label>
-          <select id="settleFilterProject"><option value="">鍏ㄩ儴椤圭洰</option></select>
-          <label>鏈堜唤</label>
+          <label>项目</label>
+          <select id="settleFilterProject"><option value="">全部项目</option></select>
+          <label>月份</label>
           <input type="month" id="settleFilterMonth">
-          <button class="btn btn-primary" onclick="renderSettlement()">鏌?璇?/button>
-          <button class="btn btn-outline" onclick="showToast('瀵煎嚭鍔熻兘灏嗗湪鍚庣画鐗堟湰瀹炵幇','info')">馃摜 瀵煎嚭 Excel</button>
+          <button class="btn btn-primary" onclick="renderSettlement()">查 询</button>
+          <button class="btn btn-outline" onclick="showToast('导出功能将在后续版本实现','info')">📥 导出 Excel</button>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">姹囨€?/div>
+        <div class="card-title">汇总</div>
         <div class="summary-grid" id="settleSummary"></div>
       </div>
       <div class="card" id="settleCostDetailCard">
-        <div class="card-title">鎴愭湰鍒嗙被鏄庣粏</div>
+        <div class="card-title">成本分类明细</div>
         <div class="table-container">
           <table>
-            <thead><tr><th>鎴愭湰绫诲瀷</th><th class="num">閲戦</th><th class="num">鍗犳瘮</th></tr></thead>
+            <thead><tr><th>成本类型</th><th class="num">金额</th><th class="num">占比</th></tr></thead>
             <tbody id="settleCostBody"></tbody>
           </table>
         </div>
@@ -146,31 +146,31 @@
     <!-- Ledger -->
     <div class="page" id="pageLedger">
       <div class="page-header">
-        <h1>鍩虹鍙拌处</h1>
-        <p>缁存姢鍥哄畾鎴愭湰鍩虹鏁版嵁锛屾寜鏈堣嚜鍔ㄥ弬涓庡埄娑﹁绠?/p>
+        <h1>基础台账</h1>
+        <p>维护固定成本基础数据，按月自动参与利润计算</p>
       </div>
       <div class="ledger-filter-bar">
         <div class="dt-field">
-          <label>椤圭洰绛涢€?/label>
+          <label>项目筛选</label>
           <select id="ledgerProjectFilter" onchange="renderLedger()">
-            <option value="">鍏ㄩ儴椤圭洰</option>
+            <option value="">全部项目</option>
           </select>
         </div>
       </div>
       <div class="tabs" id="ledgerTabs">
-        <div class="tab-item active" data-tab="ledgerPersonnel">馃懁 浜哄憳</div>
-        <div class="tab-item" data-tab="ledgerMachinery">馃殰 鏈烘</div>
-        <div class="tab-item" data-tab="ledgerFixed">馃搵 鍥哄畾璐圭敤</div>
+        <div class="tab-item active" data-tab="ledgerPersonnel">👤 人员</div>
+        <div class="tab-item" data-tab="ledgerMachinery">🚜 机械</div>
+        <div class="tab-item" data-tab="ledgerFixed">📋 固定费用</div>
       </div>
       <div class="tab-content active" id="ledgerPersonnel">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">浜哄憳宸ヨ祫</span>
-            <button class="btn btn-success btn-sm" onclick="showLedgerForm('personnel')">锛?鏂板浜哄憳</button>
+            <span class="card-title" style="margin:0;">人员工资</span>
+            <button class="btn btn-success btn-sm" onclick="showLedgerForm('personnel')">＋ 新增人员</button>
           </div>
           <div class="table-container">
             <table>
-              <thead><tr><th>濮撳悕</th><th>宀椾綅</th><th>鎵€灞為」鐩?/th><th class="num">鏈堝伐璧?/th><th>鍏ヨ亴鏃ユ湡</th><th>绂昏亴鏃ユ湡</th><th>澶囨敞</th><th class="text-center">鎿嶄綔</th></tr></thead>
+              <thead><tr><th>姓名</th><th>岗位</th><th>所属项目</th><th class="num">月工资</th><th>入职日期</th><th>离职日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
               <tbody id="ledgerPersonnelBody"></tbody>
             </table>
           </div>
@@ -179,12 +179,12 @@
       <div class="tab-content" id="ledgerMachinery">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">绉熻祦鏈烘</span>
-            <button class="btn btn-success btn-sm" onclick="showLedgerForm('machinery')">锛?鏂板鏈烘</button>
+            <span class="card-title" style="margin:0;">租赁机械</span>
+            <button class="btn btn-success btn-sm" onclick="showLedgerForm('machinery')">＋ 新增机械</button>
           </div>
           <div class="table-container">
             <table>
-              <thead><tr><th>璁惧鍚嶇О</th><th>绉熻祦鍗曚綅</th><th>鎵€灞為」鐩?/th><th class="num">鏈堢閲?/th><th>寮€濮嬫棩鏈?/th><th>缁撴潫鏃ユ湡</th><th>澶囨敞</th><th class="text-center">鎿嶄綔</th></tr></thead>
+              <thead><tr><th>设备名称</th><th>租赁单位</th><th>所属项目</th><th class="num">月租金</th><th>开始日期</th><th>结束日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
               <tbody id="ledgerMachineryBody"></tbody>
             </table>
           </div>
@@ -193,12 +193,12 @@
       <div class="tab-content" id="ledgerFixed">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">鍥哄畾璐圭敤</span>
-            <button class="btn btn-success btn-sm" onclick="showLedgerForm('fixed')">锛?鏂板璐圭敤</button>
+            <span class="card-title" style="margin:0;">固定费用</span>
+            <button class="btn btn-success btn-sm" onclick="showLedgerForm('fixed')">＋ 新增费用</button>
           </div>
           <div class="table-container">
             <table>
-              <thead><tr><th>璐圭敤鍚嶇О</th><th>鎵€灞為」鐩?/th><th class="num">閲戦</th><th>寮€濮嬫棩鏈?/th><th>缁撴潫鏃ユ湡</th><th>澶囨敞</th><th class="text-center">鎿嶄綔</th></tr></thead>
+              <thead><tr><th>费用名称</th><th>所属项目</th><th class="num">金额</th><th>开始日期</th><th>结束日期</th><th>备注</th><th class="text-center">操作</th></tr></thead>
               <tbody id="ledgerFixedBody"></tbody>
             </table>
           </div>
@@ -209,16 +209,16 @@
     <!-- Analysis -->
     <div class="page" id="pageAnalysis">
       <div class="page-header">
-        <h1>缁忚惀鍒嗘瀽</h1>
-        <p>缁忚惀瓒嬪娍涓庡姣斿垎鏋?/p>
+        <h1>经营分析</h1>
+        <p>经营趋势与对比分析</p>
       </div>
       <div class="card">
         <div class="filter-bar">
-          <label>椤圭洰</label>
-          <select id="analysisFilterProject"><option value="">鍏ㄩ儴椤圭洰</option></select>
-          <label>鏈堜唤</label>
+          <label>项目</label>
+          <select id="analysisFilterProject"><option value="">全部项目</option></select>
+          <label>月份</label>
           <input type="month" id="analysisFilterMonth">
-          <button class="btn btn-primary" onclick="renderAnalysis()">鏌?璇?/button>
+          <button class="btn btn-primary" onclick="renderAnalysis()">查 询</button>
         </div>
       </div>
       <div id="analysisContent"></div>
@@ -227,23 +227,23 @@
     <!-- Settings -->
     <div class="page" id="pageSettings">
       <div class="page-header">
-        <h1>璁剧疆</h1>
-        <p>绠＄悊绯荤粺鍩虹閰嶇疆</p>
+        <h1>设置</h1>
+        <p>管理系统基础配置</p>
       </div>
       <div class="tabs" id="settingsTabs">
-        <div class="tab-item active" data-tab="tabProjects">椤圭洰璁剧疆</div>
-        <div class="tab-item" data-tab="tabUsers">鐢ㄦ埛璁剧疆</div>
-        <div class="tab-item" data-tab="tabCostTypes">鎴愭湰绫诲瀷</div>
+        <div class="tab-item active" data-tab="tabProjects">项目设置</div>
+        <div class="tab-item" data-tab="tabUsers">用户设置</div>
+        <div class="tab-item" data-tab="tabCostTypes">成本类型</div>
       </div>
       <div class="tab-content active" id="tabProjects">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">椤圭洰鍒楄〃</span>
-            <button class="btn btn-success btn-sm" onclick="showProjectForm()">锛?鏂板椤圭洰</button>
+            <span class="card-title" style="margin:0;">项目列表</span>
+            <button class="btn btn-success btn-sm" onclick="showProjectForm()">＋ 新增项目</button>
           </div>
           <div class="table-container">
             <table>
-              <thead><tr><th>椤圭洰鍚嶇О</th><th class="num">榛樿鍔犲伐鍗曚环</th><th class="num">榛樿杩愯緭鍗曚环</th><th class="num">鍚堝悓鎬绘柟閲?/th><th class="text-center">鎿嶄綔</th></tr></thead>
+              <thead><tr><th>项目名称</th><th class="num">默认加工单价</th><th class="num">默认运输单价</th><th class="num">合同总方量</th><th class="text-center">操作</th></tr></thead>
               <tbody id="projectTableBody"></tbody>
             </table>
           </div>
@@ -252,12 +252,12 @@
       <div class="tab-content" id="tabUsers">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">鐢ㄦ埛鍒楄〃</span>
-            <button class="btn btn-success btn-sm" onclick="showUserForm()">锛?鏂板鐢ㄦ埛</button>
+            <span class="card-title" style="margin:0;">用户列表</span>
+            <button class="btn btn-success btn-sm" onclick="showUserForm()">＋ 新增用户</button>
           </div>
           <div class="table-container">
             <table>
-              <thead><tr><th>璐﹀彿</th><th>濮撳悕</th><th>瑙掕壊</th><th>璐熻矗椤圭洰</th><th class="text-center">鎿嶄綔</th></tr></thead>
+              <thead><tr><th>账号</th><th>姓名</th><th>角色</th><th>负责项目</th><th class="text-center">操作</th></tr></thead>
               <tbody id="userTableBody"></tbody>
             </table>
           </div>
@@ -266,12 +266,12 @@
       <div class="tab-content" id="tabCostTypes">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="card-title" style="margin:0;">鎴愭湰绫诲瀷鍒楄〃</span>
-            <button class="btn btn-success btn-sm" onclick="showCostTypeForm()">锛?鏂板绫诲瀷</button>
+            <span class="card-title" style="margin:0;">成本类型列表</span>
+            <button class="btn btn-success btn-sm" onclick="showCostTypeForm()">＋ 新增类型</button>
           </div>
           <div class="table-container">
             <table>
-              <thead><tr><th>鍚嶇О</th><th>鐘舵€?/th><th class="text-center">鎿嶄綔</th></tr></thead>
+              <thead><tr><th>名称</th><th>状态</th><th class="text-center">操作</th></tr></thead>
               <tbody id="costTypeTableBody"></tbody>
             </table>
           </div>
@@ -285,8 +285,8 @@
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
-      <h3 id="modalTitle">鏍囬</h3>
-      <button class="modal-close" onclick="closeModal()">脳</button>
+      <h3 id="modalTitle">标题</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
   </div>
@@ -297,4 +297,3 @@
 <script src="app.js"></script>
 </body>
 </html>
-
