@@ -93,7 +93,8 @@ a { text-decoration: none; color: inherit; }
 .cr-item select:focus { border-color: #1a56db; }
 .cr-item input[type="number"] { height: 34px; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0 10px; background: #fff; outline: none; }
 .cr-item input.cr-amount { width: 100px; }
-.cr-item input.cr-qty { width: 70px; }
+.cr-item input.cr-qty { width: 65px; }
+.cr-item input.cr-price { width: 65px; }
 .cr-item input[type="number"]:focus { border-color: #1a56db; }
 .cr-item input[type="text"] { height: 34px; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0 10px; background: #fff; outline: none; flex: 1; min-width: 80px; }
 .cr-item input[type="text"]:focus { border-color: #1a56db; }
